@@ -1,8 +1,7 @@
 <?php
-
+use App\Http\Controllers\PhotoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PhotoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,11 +18,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
 Route::prefix('my-photos')->namespace('API')->group(function () {
-    Route::post('/', 'PhotoController@add');
-    Route::delete('/{photo}', 'PhotoController@remove');
-    Route::put('/order', 'PhotoController@order');
     Route::get('/', 'PhotoController@list');
-    Route::post('/store', 'PhotoController@store')->name('photos.store');
 });

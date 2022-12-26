@@ -4,6 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>Photos</title>
 
@@ -32,22 +33,22 @@
                 <div class="card mt-3">
                     <div class="card-header">Uploaded Pictures</div>
                     <div class="card-body">
+                    <div class="photo-list m-2 row">
                         @if (count($photos) > 0)
-                        <div class="photo-list m-2 row">
                             @foreach ($photos as $photo)
                             <div class="photo-box col" data-id="{{ $photo->id }}">
                                 <img src="{{ asset($photo->path) }}" style="max-width:100px; max-heigth:100px;">
-                                <form action="/my-photos/{{ $photo->id }}" method="delete">
-                                    @csrf
+                                <form action="/my-photos/{{ $photo->id }}" method="POST">
+                                @method('DELETE')    
+                                @csrf
                                     <button type="submit" class="btn btn-danger btn-sm remove-button">Delete</button>
                                 </form>
                             </div>
-                             
                             @endforeach
-                        </div>
                         @else
                             <p>No uploaded pictures</p>
                         @endif
+                        </div>
                     </div>
                 </div>
             </div>
@@ -114,16 +115,18 @@
         });
 
         // deleting photo
-        $('.photo-list').on('click', '.remove-button', function() {
+        $('.photo-list').on('click', '.remove-button', function(e) {
+            e.preventDefault();
             if (confirm('Are you sure for delete?')) {
                 var photoBox = $(this).closest('.photo-box');
                 var photoId = photoBox.data('id');
 
                 $.ajax({
                     type: 'DELETE',
-                    url: '{{ route('photos.destroy', ':id') }}'.replace(':id', photoId),
+                    url: '{{ route('photos.destroy') }}',
                     data: {
-                        _token: '{{ csrf_token() }}'
+                        _token: '{{ csrf_token() }}',
+                        photo:photoId
                     },
                     success: function(data) {
                         console.log(data);

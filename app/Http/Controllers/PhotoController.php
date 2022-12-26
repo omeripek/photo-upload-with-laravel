@@ -15,25 +15,10 @@ class PhotoController extends Controller
         return view('photos', ['photos' => $photos]);
     }
 
-    public function add(Request $request)
-    {
-            $request->validate([
-                'image' => 'required|image|mimes:png,jpg,jpeg|max:2048'
-            ]);
-    
-            $imageName = time().'.'.$request->image->extension();
-    
-            // Public Folder
-            $request->image->move(public_path('photos'), $imageName);
-    
-    
-            return back()->with('success', 'Image uploaded Successfully!')
-            ->with('image', $imageName);
-    }
 
-
-    public function destroy($id)
+    public function destroy(Request $request)
     {
+        $id = $request->photo;
         // Find the image from the database
         $photo = Photo::findOrFail($id);
 
@@ -79,8 +64,7 @@ class PhotoController extends Controller
         $photo->path = 'images/' . $filename;
         $photo->save();
 
-        // Redirect to the list of photos
-        //return redirect()->route('photos.index');
+        // Response json data
         return response()->json([
             'success' => 'Photo uploaded Successfully!',
             'id' => $photo->id,

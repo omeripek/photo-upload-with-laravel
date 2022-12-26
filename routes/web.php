@@ -26,5 +26,5 @@ Route::get('/', function () {
 Route::get('/my-photos', 'App\Http\Controllers\PhotoController@index')->name('photos.index');
 Route::post('/my-photos/order', 'App\Http\Controllers\PhotoController@updateOrder')->name('photos.order');
 
-Route::delete('my-photos/{photo}', 'App\Http\Controllers\PhotoController@destroy')->name('photos.destroy');
+Route::delete('my-photos', 'App\Http\Controllers\PhotoController@destroy')->name('photos.destroy');
 Route::post('/my-photos', 'App\Http\Controllers\PhotoController@store')->name('photos.store');
