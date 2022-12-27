@@ -58,4 +58,4 @@ updated_at: updated time
 
 ![Screenshot 3](3.jpeg)
 
-![Screenshot 4 Api Test](3.jpeg)
+![Screenshot 4 Api Test](api-test.jpeg)
