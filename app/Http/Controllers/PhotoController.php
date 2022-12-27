@@ -9,9 +9,11 @@ class PhotoController extends Controller
 {
     public function index()
     {
-       // $photos = Photo::orderBy('order')->get();
-       // return view('photos', compact('photos'));
-        $photos = Photo::all();
+       
+         // Get the list of photos sorted by the order attribute
+        $photos = Photo::orderBy('order')->get();
+
+        // Render the view with the sorted photos
         return view('photos', ['photos' => $photos]);
     }
 
@@ -33,19 +35,28 @@ class PhotoController extends Controller
         ]);
     }
 
-    public function order(Request $request)
+    public function updateOrder(Request $request)
     {
-        $photos = json_decode($request->photos);
-
-        foreach ($photos as $index => $photo) {
-            Photo::where('id', $photo->id)
-                ->update(['position' => $index]);
-        }
-
-        return response()->json([
-            'success' => 'Photos ordered successfully'
+        // Validate the form data
+        $request->validate([
+            'order' => 'required|array',
         ]);
-    }
+    
+        // Get the list of sorted photos
+        $sortedPhotos = $request->input('order');
+    
+        // Update the order of the photos in the database
+        foreach ($sortedPhotos as $index => $photoId) {
+            $photo = Photo::find($photoId);
+            $photo->order = $index + 1;
+            $photo->save();
+        }
+    
+        // Return a success response
+        return response()->json([
+            'success' => true,
+        ]);
+    }    
 
     public function store(Request $request)
     {

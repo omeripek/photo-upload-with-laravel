@@ -27,6 +27,29 @@ php artisan migrate
 php artisan serve
 ```
 
+# Api informations
+
+```
+GET : http://127.0.0.1:8001/api/photos
+```
+Returns all photos with this url.
+
+```
+status : true
+```
+
+Other photos returning datas;
+
+```
+id : photo record id
+path: photo url
+order: photos index for sorting
+created_at: created time and uploaded time
+updated_at: updated time
+```
+
+
+
 # Some Screenshots
 
 ![Screenshot 1](1.jpeg)
@@ -34,3 +57,5 @@ php artisan serve
 ![Screenshot 2](2.jpeg)
 
 ![Screenshot 3](3.jpeg)
+
+![Screenshot 4 Api Test](3.jpeg)

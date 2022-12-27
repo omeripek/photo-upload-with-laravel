@@ -33,7 +33,7 @@
                 <div class="card mt-3">
                     <div class="card-header">Uploaded Pictures</div>
                     <div class="card-body">
-                    <div class="photo-list m-2 row">
+                    <div class="photo-list m-2 row" id="photo-list">
                         @if (count($photos) > 0)
                             @foreach ($photos as $photo)
                             <div class="photo-box col" data-id="{{ $photo->id }}">
@@ -55,30 +55,10 @@
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-    <script>
-    $(document).ready(function() {
-        // Photo Sort
-        $('.photo-list').sortable({
-            update: function(event, ui) {
-                var data = $(this).sortable('serialize');
-                console.log(data);
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.10.2/Sortable.min.js"></script>
 
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('photos.order') }}',
-                    data: data,
-                    success: function(data) {
-                        console.log(data);
-                        alert(data.success);
-                    },
-                    error: function(data) {
-                        console.log(data);
-                        alert(data.responseJSON.message);
-                    }
-                });
-            }
-        });
-    });
+    <script>
         // Photo adding
         $('#uploadForm').submit(function(e) {
             e.preventDefault();
@@ -143,6 +123,46 @@
                 });
             }
         });
+
+        // Select the element that will be sortable
+        var el = document.getElementById('photo-list');
+
+        // Create the sortable instance
+        var sortable = Sortable.create(el, {
+        });
+
+        sortable.on('sortable:stop', function(event) {
+            // Get the list of sorted photos
+            var sortedPhotos = event.to.children;
+
+            // Update the order of the photos in the database
+            for (var i = 0; i < sortedPhotos.length; i++) {
+                var photoId = sortedPhotos[i].dataset.id;
+                updatePhotoOrder(photoId, i + 1);
+            }
+        });
+
+        function updatePhotoOrder(photoId, order) {
+            // Send an AJAX request to update the photo order
+            $.ajax({
+                type: 'PATCH',
+                url: '/my-photos/' + photoId,
+                data: {
+                    order: order
+                },
+                success: function(data) {
+                    console.log(data);
+                    // Show a success message
+                    alert('Photo order updated successfully');
+                },
+                error: function(data) {
+                    console.log(data);
+                    // Show an error message
+                    alert('An error occurred while updating the photo order');
+                }
+            });
+        }
+
     </script>
 </body>
 </html>

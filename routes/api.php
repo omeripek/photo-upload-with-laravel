@@ -1,5 +1,5 @@
 <?php
-use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\Api\PhotoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +18,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('my-photos')->namespace('API')->group(function () {
-    Route::get('/', 'PhotoController@list');
-});
+//Route::get('/my-photos', 'App\Http\Controllers\Api\PhotoController@index');
+
+Route::apiResource('photos', PhotoController::class);
